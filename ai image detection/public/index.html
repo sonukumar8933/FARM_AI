@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Identifier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1c2e 0%, #2d1b3d 100%);
+      padding: 20px;
+      color: #e2e8f0;
+      animation: gradientBG 15s ease infinite;
+      background-size: 400% 400%;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #container {
+      background-color: rgba(30, 41, 59, 0.95);
+      padding: 2.5rem;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: containerAppear 0.8s ease-out;
+    }
+
+    @keyframes containerAppear {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      color: #fff;
+      margin-bottom: 2rem;
+      font-size: 2.2rem;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: relative;
+      display: inline-block;
+      animation: titleAppear 0.8s ease-out;
+    }
+
+    @keyframes titleAppear {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      border-radius: 2px;
+      animation: underlineAppear 0.8s ease-out 0.3s both;
+    }
+
+    @keyframes underlineAppear {
+      from {
+        width: 0;
+        opacity: 0;
+      }
+      to {
+        width: 60px;
+        opacity: 1;
+      }
+    }
+
+    .upload-area {
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.03);
+      animation: uploadAreaAppear 0.8s ease-out 0.4s both;
+    }
+
+    @keyframes uploadAreaAppear {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .upload-area:hover {
+      border-color: #8b5cf6;
+      background: rgba(139, 92, 246, 0.05);
+      transform: translateY(-2px);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .upload-label {
+      display: block;
+      color: #e2e8f0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-label::before {
+      content: '📁';
+      margin-right: 12px;
+      font-size: 1.8rem;
+      display: inline-block;
+      transition: all 0.3s ease;
+      animation: iconBounce 2s infinite;
+    }
+
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .upload-area:hover .upload-label::before {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    #imagePreview {
+      max-width: 100%;
+      max-height: 300px;
+      margin: 1.5rem 0;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: imageAppear 0.5s ease-out;
+    }
+
+    @keyframes imageAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    #imagePreview:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    #description {
+      margin-top: 2rem;
+      color: #e2e8f0;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      min-height: 3rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      animation: descriptionAppear 0.5s ease-out;
+    }
+
+    @keyframes descriptionAppear {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    button {
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      position: relative;
+      overflow: hidden;
+      animation: buttonAppear 0.8s ease-out 0.6s both;
+    }
+
+    @keyframes buttonAppear {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    button:disabled {
+      background: #4b5563;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.5); }
+    }
+
+    .glow {
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    /* Add success animation */
+    @keyframes successPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .success {
+      animation: successPulse 0.5s ease-out;
+    }
+
+    /* Add error animation */
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .error {
+      animation: errorShake 0.5s ease-out;
+    }
+
+    .question-container {
+      width: 100%;
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      animation: containerAppear 0.5s ease-out;
+    }
+
+    .question-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px 20px;
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .question-input:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    }
+
+    .question-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .secondary-button {
+      background: rgba(139, 92, 246, 0.2);
+      color: white;
+      padding: 12px 24px;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .secondary-button:hover {
+      background: rgba(139, 92, 246, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+    }
+
+    .secondary-button:disabled {
+      background: rgba(75, 85, 99, 0.2);
+      border-color: rgba(75, 85, 99, 0.3);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>Image Identifier</h1>
+    <div class="upload-area">
+      <label class="upload-label" for="imageUpload">
+        Choose an image or drag it here
+      </label>
+      <input type="file" id="imageUpload" accept="image/*">
+    </div>
+    <img id="imagePreview" src="#" alt="Image Preview" style="display: none;">
+    <div class="question-container" style="display: none;">
+      <input 
+        type="text" 
+        id="questionInput" 
+        placeholder="Ask a question about the image..."
+        class="question-input"
+      >
+      <button id="askButton" class="secondary-button">
+        <span class="button-text">Ask</span>
+      </button>
+    </div>
+    <button id="identifyButton" disabled>
+      <span class="button-text">Identify Image</span>
+    </button>
+    <p id="description"></p>
+  </div>
+
+  <script>
+    const imageUpload = document.getElementById('imageUpload');
+    const imagePreview = document.getElementById('imagePreview');
+    const identifyButton = document.getElementById('identifyButton');
+    const description = document.getElementById('description');
+    const buttonText = document.querySelector('.button-text');
+    const questionContainer = document.querySelector('.question-container');
+    const questionInput = document.getElementById('questionInput');
+    const askButton = document.getElementById('askButton');
+
+    let file;
+
+    // Drag and drop functionality
+    const uploadArea = document.querySelector('.upload-area');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+      uploadArea.style.borderColor = '#8b5cf6';
+      uploadArea.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
+      uploadArea.classList.add('glow');
+    }
+
+    function unhighlight(e) {
+      uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
+      uploadArea.classList.remove('glow');
+    }
+
+    uploadArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files.length > 0) {
+        file = files[0];
+        handleFile(file);
+      }
+    }
+
+    function handleFile(file) {
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          imagePreview.src = event.target.result;
+          imagePreview.style.display = 'block';
+          identifyButton.disabled = false;
+          questionContainer.style.display = 'flex';
+          imagePreview.classList.add('success');
+          setTimeout(() => imagePreview.classList.remove('success'), 500);
+        }
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please upload an image file');
+        uploadArea.classList.add('error');
+        setTimeout(() => uploadArea.classList.remove('error'), 500);
+      }
+    }
+
+    imageUpload.addEventListener('change', (e) => {
+      file = e.target.files[0];
+      if (file) {
+        handleFile(file);
+      } else {
+        imagePreview.src = '#';
+        imagePreview.style.display = 'none';
+        identifyButton.disabled = true;
+      }
+    });
+
+    identifyButton.addEventListener('click', async () => {
+      description.textContent = 'Identifying...';
+      buttonText.textContent = 'Identifying...';
+      identifyButton.disabled = true;
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const response = await fetch('/identify', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        description.textContent = data.description;
+        description.classList.add('success');
+        setTimeout(() => description.classList.remove('success'), 500);
+      } catch (error) {
+        console.error('Error:', error);
+        description.textContent = 'Error identifying image. Please try again.';
+        description.classList.add('error');
+        setTimeout(() => description.classList.remove('error'), 500);
+      } finally {
+        buttonText.textContent = 'Identify Image';
+        identifyButton.disabled = false;
+      }
+    });
+
+    askButton.addEventListener('click', async () => {
+      const question = questionInput.value.trim();
+      if (!question) {
+        questionInput.classList.add('error');
+        setTimeout(() => questionInput.classList.remove('error'), 500);
+        return;
+      }
+
+      description.textContent = 'Processing your question...';
+      askButton.disabled = true;
+
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('question', question);
+
+      try {
+        const response = await fetch('/ask', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        description.textContent = data.answer;
+        description.classList.add('success');
+        setTimeout(() => description.classList.remove('success'), 500);
+      } catch (error) {
+        console.error('Error:', error);
+        description.textContent = 'Error processing your question. Please try again.';
+        description.classList.add('error');
+        setTimeout(() => description.classList.remove('error'), 500);
+      } finally {
+        askButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150" height="50" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .leaf { fill: #2ecc71; }
+        .text { fill: #333; font-family: Arial, sans-serif; font-weight: bold; }
+    </style>
+    <path class="leaf" d="M30 10c-11 0-20 9-20 20 0 11 9 20 20 20s20-9 20-20c0-11-9-20-20-20zm0 35c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z"/>
+    <path class="leaf" d="M30 15c-8.3 0-15 6.7-15 15 0-8.3 6.7-15 15-15z"/>
+    <text x="60" y="35" class="text" font-size="24">Farm AI</text>
+</svg>

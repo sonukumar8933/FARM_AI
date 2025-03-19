@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop & Soil Health Monitoring | Smart Farm AI</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4ade80;
+            --primary-dark: #22c55e;
+            --background-dark: #0f172a;
+            --background-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-color: #3b82f6;
+            --gradient-start: #4ade80;
+            --gradient-end: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            padding-top: 70px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav.scrolled {
+            padding: 0.7rem 2rem;
+            background: rgba(30, 41, 59, 0.98);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav li {
+            position: relative;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::before {
+            width: 80%;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav a.active {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.15);
+        }
+
+        nav a.active::before {
+            width: 80%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0;
+            text-align: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(74, 222, 128, 0.2) 0%, transparent 70%);
+            animation: pulse 4s infinite;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-secondary);
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+        }
+
+        /* Feature Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+        }
+
+        /* Dashboard Section */
+        .dashboard-section {
+            background: var(--background-card);
+            padding: 50px 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dashboard-preview {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 30px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-preview:hover {
+            transform: scale(1.02);
+        }
+
+        /* Metrics Section */
+        .metrics-section {
+            padding: 60px 0;
+        }
+
+        .metric-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .metric-icon {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        /* Sensor Network Section */
+        .sensor-network {
+            padding: 60px 0;
+        }
+
+        .sensor-map {
+            height: 400px;
+            background: var(--background-card);
+            border-radius: 15px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sensor-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 0 0 rgba(74, 222, 128, 0.4);
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+            }
+        }
+
+        .sensor-tooltip {
+            position: absolute;
+            background: var(--background-dark);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
+            width: 200px;
+            display: none;
+        }
+
+        .sensor-tooltip h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .sensor-tooltip p {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin: 3px 0;
+        }
+
+        /* Data Visualization Section */
+        .data-viz-section {
+            background: var(--background-card);
+            padding: 50px 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chart-container {
+            height: 300px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+
+        .legend-label {
+            color: var(--text-secondary);
+        }
+
+        /* How It Works Section */
+        .steps-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .step {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .step p {
+            color: var(--text-secondary);
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 60px 0;
+        }
+
+        .pricing-card {
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 12px;
+            right: -30px;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 40px;
+            font-size: 0.8em;
+            transform: rotate(45deg);
+        }
+
+        .pricing-header {
+            margin-bottom: 20px;
+        }
+
+        .pricing-name {
+            font-size: 1.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .pricing-price {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .pricing-period {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        .pricing-features {
+            margin: 20px 0;
+            flex-grow: 1;
+        }
+
+        .pricing-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        .pricing-feature i {
+            color: var(--primary-color);
+        }
+
+        .pricing-cta {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            padding: 12px 0;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .pricing-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 60px 0;
+        }
+
+        .testimonial-card {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .testimonial-text {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info {
+            color: var(--text-primary);
+        }
+
+        .author-role {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(59, 130, 246, 0.1));
+            padding: 80px 0;
+            text-align: center;
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+
+        .cta-title {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .cta-description {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+        }
+
+        .cta-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .cta-btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--primary-color);
+        }
+
+        .cta-btn-secondary:hover {
+            background: rgba(74, 222, 128, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--background-card);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a:hover {
+            color: var(--background-dark);
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p {
+            margin: 5px 0;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.6; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            nav ul {
+                gap: 0.5rem;
+            }
+
+            nav a {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.9em;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1em;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .section-title h2 {
+                font-size: 1.8em;
+            }
+
+            .step {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo-text">farm <span>ai</span></a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#ai-solutions">AI Solutions</a></li>
+            <li><a href="pest-disease-detection.html">Pest & Disease</a></li>
+            <li><a href="soil-health-monitoring.html" class="active">Soil Health</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="SignUp_LogIn_Form.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Crop & Soil Health Monitoring</h1>
+            <p>Continuous monitoring and analysis of soil conditions and crop health using advanced AI sensors</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Smart Soil Monitoring</h2>
+                <p>Real-time insights for optimal crop growth and soil management</p>
+            </div>
+            <div class="grid">
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                    <h3><i class="fas fa-tint"></i> Soil Moisture Tracking</h3>
+                    <p>Continuous monitoring of soil moisture levels at different depths to optimize irrigation and prevent water stress or waterlogging.</p>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="200">
+                    <h3><i class="fas fa-flask"></i> Nutrient Analysis</h3>
+                    <p>Real-time tracking of essential nutrients (N-P-K) in your soil to ensure optimal fertilization and prevent deficiencies or excesses.</p>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="300">
+                    <h3><i class="fas fa-thermometer-half"></i> Environmental Monitoring</h3>
+                    <p>Track soil temperature, pH levels, and electrical conductivity to maintain ideal growing conditions for your crops.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-section" data-aos="fade-up">
+        <div class="container">
+            <div class="section-title">
+                <h2>Comprehensive Dashboard</h2>
+                <p>All your soil and crop data in one intuitive interface</p>
+            </div>
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8ZGFzaGJvYXJkfHx8fHx8MTY4NTM5MDQ5Mg&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080" alt="Soil Health Dashboard" class="dashboard-preview">
+            <p>Our intuitive dashboard gives you a complete overview of your farm's soil health and crop status. Monitor trends, receive alerts, and make data-driven decisions.</p>
+        </div>
+    </section>
+
+    <section class="metrics-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Key Metrics We Track</h2>
+                <p>Comprehensive monitoring for optimal crop growth</p>
+            </div>
+            <div class="grid">
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="metric-icon"><i class="fas fa-water"></i></div>
+                    <div class="metric-value">24/7</div>
+                    <div class="metric-label">Soil Moisture Monitoring</div>
+                </div>
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="metric-icon"><i class="fas fa-seedling"></i></div>
+                    <div class="metric-value">15+</div>
+                    <div class="metric-label">Nutrient Parameters</div>
+                </div>
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="metric-value">95%</div>
+                    <div class="metric-label">Prediction Accuracy</div>
+                </div>
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="metric-icon"><i class="fas fa-leaf"></i></div>
+                    <div class="metric-value">30%</div>
+                    <div class="metric-label">Yield Improvement</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sensor-network">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>IoT Sensor Network</h2>
+                <p>Distributed sensors provide comprehensive coverage of your entire farm</p>
+            </div>
+            <div class="sensor-map" data-aos="fade-up">
+                <!-- Sensor points will be added dynamically with JavaScript -->
+            </div>
+            <p class="text-center">Our wireless sensors create a mesh network across your farm, providing real-time data from every corner of your fields.</p>
+        </div>
+    </section>
+
+    <section class="data-viz-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Data Visualization</h2>
+                <p>Intuitive charts and graphs to understand your soil health trends</p>
+            </div>
+            <div class="chart-container" id="moisture-chart" data-aos="fade-up">
+                <!-- Chart will be rendered with JavaScript -->
+            </div>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #4ade80;"></div>
+                    <div class="legend-label">Moisture</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3b82f6;"></div>
+                    <div class="legend-label">Optimal Range</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ef4444;"></div>
+                    <div class="legend-label">Critical Threshold</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>How It Works</h2>
+                <p>Our soil monitoring system is easy to set up and use</p>
+            </div>
+            <div class="steps-container">
+                <div class="step" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">1</div>
+                    <h3>Install Sensors</h3>
+                    <p>Place our wireless sensors at strategic locations throughout your fields.</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">2</div>
+                    <h3>Connect Gateway</h3>
+                    <p>Set up the central gateway that collects data from all sensors and sends it to the cloud.</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">3</div>
+                    <h3>Access Dashboard</h3>
+                    <p>View your real-time soil and crop data on our intuitive web and mobile dashboard.</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="400">
+                    <div class="step-number">4</div>
+                    <h3>Receive Insights</h3>
+                    <p>Get AI-powered recommendations and alerts to optimize your farming practices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Monitoring Plans</h2>
+                <p>Choose the right soil monitoring solution for your farm</p>
+            </div>
+            <div class="grid">
+                <div class="card pricing-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="pricing-header">
+                        <div class="pricing-name">Basic</div>
+                        <div class="pricing-price">$199</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Up to 10 sensors</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Soil moisture monitoring</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Basic nutrient tracking (N-P-K)</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Weekly reports</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Email alerts</span>
+                        </div>
+                    </div>
+                    <button class="pricing-cta">Get Started</button>
+                </div>
+                
+                <div class="card pricing-card popular" data-aos="fade-up" data-aos-delay="200">
+                    <div class="pricing-header">
+                        <div class="pricing-name">Professional</div>
+                        <div class="pricing-price">$349</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Up to 25 sensors</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced soil composition analysis</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Comprehensive nutrient tracking</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Daily reports and insights</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>SMS and email alerts</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>AI-powered recommendations</span>
+                        </div>
+                    </div>
+                    <button class="pricing-cta">Get Started</button>
+                </div>
+                
+                <div class="card pricing-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="pricing-header">
+                        <div class="pricing-name">Enterprise</div>
+                        <div class="pricing-price">Custom</div>
+                        <div class="pricing-period">tailored solution</div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Unlimited sensors</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Complete soil health monitoring</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced analytics and predictions</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Integration with farm management systems</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Dedicated account manager</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom reporting and API access</span>
+                        </div>
+                    </div>
+                    <button class="pricing-cta">Contact Us</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Success Stories</h2>
+                <p>Hear from farmers who transformed their agriculture with our soil monitoring</p>
+            </div>
+            <div class="grid">
+                <div class="testimonial-card" data-aos="fade-right">
+                    <div class="testimonial-text">
+                        "The soil monitoring system helped us reduce water usage by 35% while improving our crop yield. The real-time alerts about nutrient deficiencies have been game-changing for our operation."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Johnson" class="author-avatar">
+                        <div class="author-info">
+                            <div>Michael Johnson</div>
+                            <div class="author-role">Corn Farmer, Iowa</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-left">
+                    <div class="testimonial-text">
+                        "We've been able to optimize our fertilizer application with the nutrient tracking feature. The system paid for itself within the first season through savings and increased yield."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Emily Rodriguez" class="author-avatar">
+                        <div class="author-info">
+                            <div>Emily Rodriguez</div>
+                            <div class="author-role">Vineyard Owner, California</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" data-aos="fade-up">
+        <div class="container">
+            <h2 class="cta-title">Ready to Transform Your Farming?</h2>
+            <p class="cta-description">Join thousands of farmers who are using our soil monitoring technology to increase yields, reduce costs, and farm more sustainably.</p>
+            <div class="cta-buttons">
+                <button class="cta-btn cta-btn-primary">Get Started Today</button>
+                <button class="cta-btn cta-btn-secondary">Schedule a Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Smart Farm AI</h3>
+                    <p>Transforming agriculture through artificial intelligence and smart technology solutions. We help farmers optimize yields, reduce costs, and practice sustainable farming.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/smartfarmai" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://twitter.com/smartfarmai" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://linkedin.com/company/smartfarmai" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://instagram.com/smartfarmai" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/smartfarmai" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#ai-solutions">AI Solutions</a>
+                    <a href="pest-disease-detection.html">Pest & Disease Detection</a>
+                    <a href="soil-health-monitoring.html">Soil Health Monitoring</a>
+                    <a href="index.html#contact">Contact</a>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Our Solutions</h3>
+                    <a href="pest-disease-detection.html">Pest & Disease Detection</a>
+                    <a href="soil-health-monitoring.html">Soil Health Monitoring</a>
+                    <a href="#">Precision Irrigation</a>
+                    <a href="#">Yield Prediction</a>
+                    <a href="#">Market Intelligence</a>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>📍 123 Agri Tower, Silicon Valley</p>
+                    <p>📞 (123) 456-7890</p>
+                    <p>✉️ contact@smartfarm.ai</p>
+                    <p>⏰ Mon-Fri: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 Smart Farm AI. All rights reserved.</p>
+                <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Cookie Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Navigation scroll effect
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Create sensor points on the map
+        const sensorMap = document.querySelector('.sensor-map');
+        const sensorPoints = [
+            { x: 15, y: 20, id: 'sensor-1', name: 'Field Edge Sensor', moisture: '32%', temp: '22°C', nutrients: 'Optimal' },
+            { x: 35, y: 45, id: 'sensor-2', name: 'North Field Sensor', moisture: '28%', temp: '23°C', nutrients: 'Low Nitrogen' },
+            { x: 65, y: 30, id: 'sensor-3', name: 'Central Sensor', moisture: '35%', temp: '21°C', nutrients: 'Optimal' },
+            { x: 80, y: 60, id: 'sensor-4', name: 'South Field Sensor', moisture: '25%', temp: '24°C', nutrients: 'Low Phosphorus' },
+            { x: 50, y: 75, id: 'sensor-5', name: 'Irrigation Point Sensor', moisture: '40%', temp: '20°C', nutrients: 'High Potassium' }
+        ];
+
+        // Add sensor points to the map
+        sensorPoints.forEach(point => {
+            const sensorPoint = document.createElement('div');
+            sensorPoint.className = 'sensor-point';
+            sensorPoint.id = point.id;
+            sensorPoint.style.left = `${point.x}%`;
+            sensorPoint.style.top = `${point.y}%`;
+            sensorMap.appendChild(sensorPoint);
+
+            // Create tooltip for each sensor
+            const tooltip = document.createElement('div');
+            tooltip.className = 'sensor-tooltip';
+            tooltip.innerHTML = `
+                <h4>${point.name}</h4>
+                <p><strong>Moisture:</strong> ${point.moisture}</p>
+                <p><strong>Temperature:</strong> ${point.temp}</p>
+                <p><strong>Nutrients:</strong> ${point.nutrients}</p>
+            `;
+            sensorMap.appendChild(tooltip);
+
+            // Show tooltip on hover
+            sensorPoint.addEventListener('mouseenter', () => {
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${point.x}%`;
+                tooltip.style.top = `${point.y - 15}%`;
+            });
+
+            sensorPoint.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+            });
+        });
+
+        // Simple chart visualization (placeholder)
+        const chartContainer = document.getElementById('moisture-chart');
+        
+        // Create a simple visual representation of a chart
+        function createSimpleChart() {
+            const chartHeight = chartContainer.clientHeight;
+            const chartWidth = chartContainer.clientWidth;
+            
+            // Create SVG element
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+            svg.style.overflow = 'visible';
+            
+            // Create path for the moisture line
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            // Generate random data points for demonstration
+            const points = [];
+            const numPoints = 20;
+            
+            for (let i = 0; i < numPoints; i++) {
+                const x = (i / (numPoints - 1)) * chartWidth;
+                // Create a wavy pattern
+                const y = chartHeight * 0.5 - Math.sin(i * 0.5) * chartHeight * 0.2 - Math.random() * chartHeight * 0.1;
+                points.push(`${x},${y}`);
+            }
+            
+            path.setAttribute('d', `M${points.join(' L')}`);
+            path.setAttribute('stroke', '#4ade80');
+            path.setAttribute('stroke-width', '3');
+            path.setAttribute('fill', 'none');
+            
+            // Add optimal range line
+            const optimalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            optimalLine.setAttribute('x1', '0');
+            optimalLine.setAttribute('y1', chartHeight * 0.4);
+            optimalLine.setAttribute('x2', chartWidth);
+            optimalLine.setAttribute('y2', chartHeight * 0.4);
+            optimalLine.setAttribute('stroke', '#3b82f6');
+            optimalLine.setAttribute('stroke-width', '2');
+            optimalLine.setAttribute('stroke-dasharray', '5,5');
+            
+            // Add critical threshold line
+            const criticalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            criticalLine.setAttribute('x1', '0');
+            criticalLine.setAttribute('y1', chartHeight * 0.8);
+            criticalLine.setAttribute('x2', chartWidth);
+            criticalLine.setAttribute('y2', chartHeight * 0.8);
+            criticalLine.setAttribute('stroke', '#ef4444');
+            criticalLine.setAttribute('stroke-width', '2');
+            criticalLine.setAttribute('stroke-dasharray', '5,5');
+            
+            // Add elements to SVG
+            svg.appendChild(optimalLine);
+            svg.appendChild(criticalLine);
+            svg.appendChild(path);
+            
+            // Add SVG to container
+            chartContainer.appendChild(svg);
+        }
+        
+        // Create chart when page loads
+        window.addEventListener('load', createSimpleChart);
+        
+        // Recreate chart on window resize
+        window.addEventListener('resize', () => {
+            chartContainer.innerHTML = '';
+            createSimpleChart();
+        });
+
+        // Handle CTA buttons
+        document.querySelectorAll('.cta-btn, .pricing-cta').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.textContent.includes('Contact')) {
+                    window.location.href = 'index.html#contact';
+                } else {
+                    alert('Thank you for your interest! Our team will contact you shortly to get you started with our soil monitoring solution.');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

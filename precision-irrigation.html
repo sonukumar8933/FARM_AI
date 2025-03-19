@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Precision Irrigation | Smart Farm AI</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4ade80;
+            --primary-dark: #22c55e;
+            --background-dark: #0f172a;
+            --background-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-color: #3b82f6;
+            --gradient-start: #4ade80;
+            --gradient-end: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            padding-top: 70px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav.scrolled {
+            padding: 0.7rem 2rem;
+            background: rgba(30, 41, 59, 0.98);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav li {
+            position: relative;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::before {
+            width: 80%;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav a.active {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.15);
+        }
+
+        nav a.active::before {
+            width: 80%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1591962478290-b2c32f5b4330');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0;
+            text-align: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(74, 222, 128, 0.2) 0%, transparent 70%);
+            animation: pulse 4s infinite;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-secondary);
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+        }
+
+        /* Feature Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+        }
+
+        /* Water Savings Calculator */
+        .calculator-section {
+            background: var(--background-card);
+            padding: 50px 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .calculator-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .calculator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--background-dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1em;
+        }
+
+        .calculator-btn {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .calculator-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .calculator-results {
+            background: var(--background-dark);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+            display: none;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        .savings-meter {
+            height: 20px;
+            background: var(--background-card);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .savings-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 10px;
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+
+        .savings-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+
+        /* System Components */
+        .components-section {
+            padding: 60px 0;
+        }
+
+        .component-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .component-icon {
+            font-size: 50px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .component-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .component-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Interactive Demo */
+        .demo-section {
+            background: var(--background-card);
+            padding: 50px 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .demo-container {
+            position: relative;
+            height: 400px;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef') center/cover;
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .irrigation-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(59, 130, 246, 0.3);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .irrigation-droplet {
+            position: absolute;
+            width: 10px;
+            height: 15px;
+            background: rgba(59, 130, 246, 0.7);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: droplet 2s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes droplet {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+        }
+
+        .sensor-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 0 0 rgba(74, 222, 128, 0.4);
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+            }
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-btn {
+            background: var(--background-dark);
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .demo-btn:hover {
+            background: rgba(74, 222, 128, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .demo-btn.active {
+            background: var(--primary-color);
+            color: var(--background-dark);
+        }
+
+        /* How It Works Section */
+        .steps-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .step {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .step p {
+            color: var(--text-secondary);
+        }
+
+        /* Case Studies */
+        .case-studies {
+            padding: 60px 0;
+        }
+
+        .case-study-card {
+            background: var(--background-card);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .case-study-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+        }
+
+        .case-study-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .case-study-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .case-study-card:hover .case-study-image img {
+            transform: scale(1.1);
+        }
+
+        .case-study-content {
+            padding: 20px;
+        }
+
+        .case-study-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .case-study-content p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .case-study-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .case-stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.8em;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(59, 130, 246, 0.1));
+            padding: 80px 0;
+            text-align: center;
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+
+        .cta-title {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .cta-description {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+        }
+
+        .cta-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .cta-btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--primary-color);
+        }
+
+        .cta-btn-secondary:hover {
+            background: rgba(74, 222, 128, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--background-card);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a:hover {
+            color: var(--background-dark);
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p {
+            margin: 5px 0;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.6; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            nav ul {
+                gap: 0.5rem;
+            }
+
+            nav a {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.9em;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1em;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .section-title h2 {
+                font-size: 1.8em;
+            }
+
+            .step {
+                width: 100%;
+            }
+        }
+
+        .sensor-tooltip {
+            position: absolute;
+            background: var(--background-dark);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
+            width: 220px;
+            display: none;
+            transform: translate(-50%, -120%);
+        }
+
+        .sensor-tooltip h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .sensor-tooltip p {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        .moisture-meter {
+            height: 8px;
+            background: var(--background-card);
+            border-radius: 4px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        .moisture-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .demo-instruction {
+            text-align: center;
+            color: var(--text-secondary);
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        .sensor-point {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo-text">farm <span>ai</span></a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#ai-solutions">AI Solutions</a></li>
+            <li><a href="pest-disease-detection.html">Pest & Disease</a></li>
+            <li><a href="soil-health-monitoring.html">Soil Health</a></li>
+            <li><a href="precision-irrigation.html" class="active">Precision Irrigation</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="SignUp_LogIn_Form.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>AI-Driven Precision Irrigation</h1>
+            <p>Smart irrigation system that optimizes water usage based on real-time data and weather forecasts</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Smart Water Management</h2>
+                <p>Maximize efficiency and minimize waste with intelligent irrigation</p>
+            </div>
+            <div class="grid">
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                    <h3><i class="fas fa-tint"></i> Water Conservation</h3>
+                    <p>Reduce water usage by up to 50% with AI-optimized irrigation schedules that deliver exactly what your crops need, when they need it.</p>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="200">
+                    <h3><i class="fas fa-cloud-sun-rain"></i> Weather Integration</h3>
+                    <p>Our system automatically adjusts irrigation schedules based on weather forecasts, rainfall data, and evapotranspiration rates.</p>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="300">
+                    <h3><i class="fas fa-mobile-alt"></i> Remote Control</h3>
+                    <p>Control your irrigation system from anywhere using our mobile app or web dashboard with real-time monitoring and alerts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="calculator-section" data-aos="fade-up">
+        <div class="container">
+            <div class="section-title">
+                <h2>Water Savings Calculator</h2>
+                <p>See how much water and money you could save with our precision irrigation system</p>
+            </div>
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="farm-size">Farm Size (hectares):</label>
+                        <input type="number" id="farm-size" class="form-input" min="1" max="10000" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="crop-type">Primary Crop:</label>
+                        <select id="crop-type" class="form-input">
+                            <option value="corn">Corn</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="rice">Rice</option>
+                            <option value="soybean">Soybean</option>
+                            <option value="cotton">Cotton</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="current-usage">Current Water Usage (m³/hectare/year):</label>
+                        <input type="number" id="current-usage" class="form-input" min="100" max="20000" value="5000">
+                    </div>
+                    <div class="form-group">
+                        <label for="water-cost">Water Cost ($/m³):</label>
+                        <input type="number" id="water-cost" class="form-input" min="0.01" max="10" step="0.01" value="0.50">
+                    </div>
+                </div>
+                <button id="calculate-btn" class="calculator-btn">Calculate Savings</button>
+                <div id="calculator-results" class="calculator-results">
+                    <div class="result-item">
+                        <div class="result-label">Annual Water Savings:</div>
+                        <div class="result-value" id="water-savings">25,000 m³</div>
+                        <div class="savings-meter">
+                            <div class="savings-fill" id="water-savings-fill" style="width: 40%;"></div>
+                        </div>
+                        <div class="savings-labels">
+                            <span>0 m³</span>
+                            <span id="max-water">50,000 m³</span>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Annual Cost Savings:</div>
+                        <div class="result-value" id="cost-savings">$12,500</div>
+                        <div class="savings-meter">
+                            <div class="savings-fill" id="cost-savings-fill" style="width: 40%;"></div>
+                        </div>
+                        <div class="savings-labels">
+                            <span>$0</span>
+                            <span id="max-cost">$25,000</span>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Return on Investment:</div>
+                        <div class="result-value" id="roi">1.5 years</div>
+                    </div>
+                    <p>These calculations are estimates based on average savings achieved by our customers. Actual results may vary based on specific conditions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="components-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>System Components</h2>
+                <p>Integrated hardware and software for complete irrigation control</p>
+            </div>
+            <div class="grid">
+                <div class="component-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="component-icon"><i class="fas fa-microchip"></i></div>
+                    <h3>Smart Controllers</h3>
+                    <p>AI-powered control units that manage water flow based on real-time data and predictive analytics.</p>
+                </div>
+                <div class="component-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="component-icon"><i class="fas fa-wifi"></i></div>
+                    <h3>Wireless Sensors</h3>
+                    <p>Network of soil moisture, temperature, and humidity sensors that provide real-time field conditions.</p>
+                </div>
+                <div class="component-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="component-icon"><i class="fas fa-cloud"></i></div>
+                    <h3>Cloud Platform</h3>
+                    <p>Secure cloud-based system that processes data, runs AI algorithms, and delivers insights to your devices.</p>
+                </div>
+                <div class="component-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="component-icon"><i class="fas fa-faucet"></i></div>
+                    <h3>Smart Valves</h3>
+                    <p>Automated irrigation valves that precisely control water flow to different zones based on specific needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section" data-aos="fade-up">
+        <div class="container">
+            <div class="section-title">
+                <h2>Interactive Demonstration</h2>
+                <p>See how precision irrigation works in real-time</p>
+            </div>
+            <div class="demo-container" id="demo-field">
+                <div class="irrigation-overlay" id="irrigation-overlay"></div>
+                <!-- Sensor points and droplets will be added dynamically with JavaScript -->
+            </div>
+            <p class="demo-instruction">Click on any sensor to view soil moisture data</p>
+            <div class="demo-controls">
+                <button class="demo-btn" id="dry-btn">Dry Conditions</button>
+                <button class="demo-btn" id="normal-btn">Normal Conditions</button>
+                <button class="demo-btn active" id="irrigate-btn">Activate Irrigation</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>How It Works</h2>
+                <p>Our precision irrigation system is intelligent, automated, and easy to use</p>
+            </div>
+            <div class="steps-container">
+                <div class="step" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">1</div>
+                    <h3>Data Collection</h3>
+                    <p>Sensors continuously monitor soil moisture, weather conditions, and plant water needs.</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">2</div>
+                    <h3>AI Analysis</h3>
+                    <p>Our AI algorithms analyze the data to determine optimal irrigation schedules for each zone.</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">3</div>
+                    <h3>Precision Delivery</h3>
+                    <p>Smart valves automatically deliver the right amount of water exactly where and when it's needed.</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="400">
+                    <div class="step-number">4</div>
+                    <h3>Continuous Learning</h3>
+                    <p>The system learns from results and continuously improves its irrigation strategies over time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="case-studies">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Success Stories</h2>
+                <p>Real results from farmers using our precision irrigation system</p>
+            </div>
+            <div class="grid">
+                <div class="case-study-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="case-study-image">
+                        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y29ybnx8fHx8fDE2ODUzOTA0OTI&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080" alt="Corn Farm">
+                    </div>
+                    <div class="case-study-content">
+                        <h3>Midwest Corn Farm</h3>
+                        <p>A 500-hectare corn farm in Iowa implemented our precision irrigation system and achieved remarkable results in just one growing season.</p>
+                        <div class="case-study-stats">
+                            <div class="case-stat">
+                                <div class="stat-value">42%</div>
+                                <div class="stat-label">Water Savings</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-value">18%</div>
+                                <div class="stat-label">Yield Increase</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-value">$87K</div>
+                                <div class="stat-label">Annual Savings</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="case-study-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="case-study-image">
+                        <img src="https://images.unsplash.com/photo-1596450514735-111a2fe02935?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8dmluZXlhcmR8fHx8fHwxNjg1MzkwNDky&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080" alt="Vineyard">
+                    </div>
+                    <div class="case-study-content">
+                        <h3>California Vineyard</h3>
+                        <p>A premium wine producer in Napa Valley used our system to precisely control irrigation during drought conditions while maintaining grape quality.</p>
+                        <div class="case-study-stats">
+                            <div class="case-stat">
+                                <div class="stat-value">55%</div>
+                                <div class="stat-label">Water Savings</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-value">0%</div>
+                                <div class="stat-label">Quality Loss</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-value">8 mo</div>
+                                <div class="stat-label">ROI Period</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" data-aos="fade-up">
+        <div class="container">
+            <h2 class="cta-title">Ready to Optimize Your Irrigation?</h2>
+            <p class="cta-description">Join thousands of farmers who are saving water, reducing costs, and improving crop yields with our AI-driven precision irrigation system.</p>
+            <div class="cta-buttons">
+                <button class="cta-btn cta-btn-primary">Get Started Today</button>
+                <button class="cta-btn cta-btn-secondary">Schedule a Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Smart Farm AI</h3>
+                    <p>Transforming agriculture through artificial intelligence and smart technology solutions. We help farmers optimize yields, reduce costs, and practice sustainable farming.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/smartfarmai" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://twitter.com/smartfarmai" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://linkedin.com/company/smartfarmai" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://instagram.com/smartfarmai" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/smartfarmai" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#ai-solutions">AI Solutions</a>
+                    <a href="pest-disease-detection.html">Pest & Disease Detection</a>
+                    <a href="soil-health-monitoring.html">Soil Health Monitoring</a>
+                    <a href="precision-irrigation.html">Precision Irrigation</a>
+                    <a href="index.html#contact">Contact</a>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Our Solutions</h3>
+                    <a href="pest-disease-detection.html">Pest & Disease Detection</a>
+                    <a href="soil-health-monitoring.html">Soil Health Monitoring</a>
+                    <a href="precision-irrigation.html">Precision Irrigation</a>
+                    <a href="#">Yield Prediction</a>
+                    <a href="#">Market Intelligence</a>
+                    </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>📍 123 Agri Tower, Silicon Valley</p>
+                    <p>📞 (123) 456-7890</p>
+                    <p>✉️ contact@smartfarm.ai</p>
+                    <p>⏰ Mon-Fri: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 Smart Farm AI. All rights reserved.</p>
+                <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Cookie Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Navigation scroll effect
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Water Savings Calculator
+        const calculateBtn = document.getElementById('calculate-btn');
+        const calculatorResults = document.getElementById('calculator-results');
+        const farmSizeInput = document.getElementById('farm-size');
+        const cropTypeSelect = document.getElementById('crop-type');
+        const currentUsageInput = document.getElementById('current-usage');
+        const waterCostInput = document.getElementById('water-cost');
+        
+        calculateBtn.addEventListener('click', function() {
+            // Get input values
+            const farmSize = parseFloat(farmSizeInput.value);
+            const cropType = cropTypeSelect.value;
+            const currentUsage = parseFloat(currentUsageInput.value);
+            const waterCost = parseFloat(waterCostInput.value);
+            
+            // Calculate savings (simplified example)
+            let savingsPercentage = 0;
+            
+            // Different crops have different potential water savings
+            switch(cropType) {
+                case 'rice':
+                    savingsPercentage = 0.35; // 35% savings
+                    break;
+                case 'corn':
+                case 'wheat':
+                    savingsPercentage = 0.45; // 45% savings
+                    break;
+                case 'vegetables':
+                case 'fruits':
+                    savingsPercentage = 0.55; // 55% savings
+                    break;
+                default:
+                    savingsPercentage = 0.40; // 40% savings
+            }
+            
+            // Calculate water and cost savings
+            const waterSavings = farmSize * currentUsage * savingsPercentage;
+            const costSavings = waterSavings * waterCost;
+            
+            // Calculate ROI (assuming system cost is $1000 per hectare)
+            const systemCost = farmSize * 1000;
+            const roiYears = systemCost / costSavings;
+            
+            // Update results
+            document.getElementById('water-savings').textContent = Math.round(waterSavings).toLocaleString() + ' m³';
+            document.getElementById('cost-savings').textContent = '$' + Math.round(costSavings).toLocaleString();
+            document.getElementById('roi').textContent = roiYears.toFixed(1) + ' years';
+            
+            // Update progress bars
+            const maxWater = farmSize * currentUsage;
+            const maxCost = maxWater * waterCost;
+            
+            document.getElementById('water-savings-fill').style.width = (waterSavings / maxWater * 100) + '%';
+            document.getElementById('cost-savings-fill').style.width = (costSavings / maxCost * 100) + '%';
+            
+            document.getElementById('max-water').textContent = Math.round(maxWater).toLocaleString() + ' m³';
+            document.getElementById('max-cost').textContent = '$' + Math.round(maxCost).toLocaleString();
+            
+            // Show results
+            calculatorResults.style.display = 'block';
+        });
+
+        // Interactive Demo
+        const demoField = document.getElementById('demo-field');
+        const irrigationOverlay = document.getElementById('irrigation-overlay');
+        const dryBtn = document.getElementById('dry-btn');
+        const normalBtn = document.getElementById('normal-btn');
+        const irrigateBtn = document.getElementById('irrigate-btn');
+        
+        // Create sensor points with predefined data
+        const sensorData = [
+            { 
+                x: 15, 
+                y: 20, 
+                id: 'sensor-1', 
+                name: 'Field Edge Sensor', 
+                moisture: { dry: 12, normal: 25, irrigated: 38 },
+                temp: '22°C',
+                recommendation: { dry: 'Immediate irrigation needed', normal: 'Monitor closely', irrigated: 'Optimal moisture level' }
+            },
+            { 
+                x: 35, 
+                y: 45, 
+                id: 'sensor-2', 
+                name: 'North Field Sensor', 
+                moisture: { dry: 8, normal: 22, irrigated: 35 },
+                temp: '23°C',
+                recommendation: { dry: 'Critical water stress', normal: 'Schedule irrigation soon', irrigated: 'Good moisture level' }
+            },
+            { 
+                x: 65, 
+                y: 30, 
+                id: 'sensor-3', 
+                name: 'Central Sensor', 
+                moisture: { dry: 15, normal: 28, irrigated: 42 },
+                temp: '21°C',
+                recommendation: { dry: 'Water needed', normal: 'Adequate moisture', irrigated: 'Excellent moisture level' }
+            },
+            { 
+                x: 80, 
+                y: 60, 
+                id: 'sensor-4', 
+                name: 'South Field Sensor', 
+                moisture: { dry: 10, normal: 20, irrigated: 32 },
+                temp: '24°C',
+                recommendation: { dry: 'Significant water stress', normal: 'Borderline moisture level', irrigated: 'Good moisture level' }
+            },
+            { 
+                x: 50, 
+                y: 75, 
+                id: 'sensor-5', 
+                name: 'Irrigation Point Sensor', 
+                moisture: { dry: 18, normal: 30, irrigated: 45 },
+                temp: '20°C',
+                recommendation: { dry: 'Moderate water stress', normal: 'Good moisture level', irrigated: 'Excellent moisture level' }
+            }
+        ];
+        
+        // Current field condition
+        let currentCondition = 'irrigated'; // default state
+        
+        // Create sensor points and tooltips
+        sensorData.forEach(sensor => {
+            // Create sensor point
+            const sensorPoint = document.createElement('div');
+            sensorPoint.className = 'sensor-point';
+            sensorPoint.id = sensor.id;
+            sensorPoint.style.left = sensor.x + '%';
+            sensorPoint.style.top = sensor.y + '%';
+            demoField.appendChild(sensorPoint);
+            
+            // Create tooltip for sensor
+            const tooltip = document.createElement('div');
+            tooltip.className = 'sensor-tooltip';
+            tooltip.id = `tooltip-${sensor.id}`;
+            tooltip.innerHTML = `
+                <h4>${sensor.name}</h4>
+                <p><strong>Soil Moisture:</strong> <span id="${sensor.id}-moisture">${sensor.moisture[currentCondition]}%</span></p>
+                <div class="moisture-meter">
+                    <div class="moisture-fill" id="${sensor.id}-fill" style="width: ${sensor.moisture[currentCondition]}%;"></div>
+                </div>
+                <p><strong>Temperature:</strong> ${sensor.temp}</p>
+                <p><strong>Recommendation:</strong> <span id="${sensor.id}-rec">${sensor.recommendation[currentCondition]}</span></p>
+            `;
+            tooltip.style.left = sensor.x + '%';
+            tooltip.style.top = sensor.y + '%';
+            demoField.appendChild(tooltip);
+            
+            // Show tooltip on click
+            sensorPoint.addEventListener('click', () => {
+                // Hide all other tooltips first
+                document.querySelectorAll('.sensor-tooltip').forEach(t => {
+                    t.style.display = 'none';
+                });
+                
+                // Show this tooltip
+                tooltip.style.display = 'block';
+                
+                // Update tooltip data based on current condition
+                document.getElementById(`${sensor.id}-moisture`).textContent = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensor.id}-fill`).style.width = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensor.id}-rec`).textContent = sensor.recommendation[currentCondition];
+                
+                // Change fill color based on moisture level
+                const fill = document.getElementById(`${sensor.id}-fill`);
+                if (sensor.moisture[currentCondition] < 20) {
+                    fill.style.background = 'linear-gradient(90deg, #ef4444, #f97316)'; // Red to orange for dry
+                } else if (sensor.moisture[currentCondition] < 30) {
+                    fill.style.background = 'linear-gradient(90deg, #f97316, #facc15)'; // Orange to yellow for moderate
+                } else {
+                    fill.style.background = 'linear-gradient(90deg, var(--primary-color), var(--accent-color))'; // Green to blue for good
+                }
+            });
+            
+            // Hide tooltip when clicking elsewhere
+            document.addEventListener('click', (e) => {
+                if (!sensorPoint.contains(e.target) && !tooltip.contains(e.target)) {
+                    tooltip.style.display = 'none';
+                }
+            });
+        });
+        
+        // Update the demo control buttons to change sensor data
+        dryBtn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.demo-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to this button
+            this.classList.add('active');
+            
+            // Update current condition
+            currentCondition = 'dry';
+            
+            // Update demo field
+            demoField.style.filter = 'brightness(1.2) saturate(0.8)';
+            irrigationOverlay.style.opacity = '0';
+            
+            // Remove droplets
+            document.querySelectorAll('.irrigation-droplet').forEach(droplet => {
+                droplet.style.opacity = '0';
+            });
+            
+            // Update any visible tooltips
+            const visibleTooltip = document.querySelector('.sensor-tooltip[style*="display: block"]');
+            if (visibleTooltip) {
+                const sensorId = visibleTooltip.id.replace('tooltip-', '');
+                const sensor = sensorData.find(s => s.id === sensorId);
+                
+                document.getElementById(`${sensorId}-moisture`).textContent = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensorId}-fill`).style.width = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensorId}-rec`).textContent = sensor.recommendation[currentCondition];
+                
+                // Change fill color based on moisture level
+                const fill = document.getElementById(`${sensorId}-fill`);
+                if (sensor.moisture[currentCondition] < 20) {
+                    fill.style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
+                } else if (sensor.moisture[currentCondition] < 30) {
+                    fill.style.background = 'linear-gradient(90deg, #f97316, #facc15)';
+                } else {
+                    fill.style.background = 'linear-gradient(90deg, var(--primary-color), var(--accent-color))';
+                }
+            }
+        });
+        
+        normalBtn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.demo-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to this button
+            this.classList.add('active');
+            
+            // Update current condition
+            currentCondition = 'normal';
+            
+            // Update demo field
+            demoField.style.filter = 'brightness(1) saturate(1)';
+            irrigationOverlay.style.opacity = '0';
+            
+            // Remove droplets
+            document.querySelectorAll('.irrigation-droplet').forEach(droplet => {
+                droplet.style.opacity = '0';
+            });
+            
+            // Update any visible tooltips
+            const visibleTooltip = document.querySelector('.sensor-tooltip[style*="display: block"]');
+            if (visibleTooltip) {
+                const sensorId = visibleTooltip.id.replace('tooltip-', '');
+                const sensor = sensorData.find(s => s.id === sensorId);
+                
+                document.getElementById(`${sensorId}-moisture`).textContent = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensorId}-fill`).style.width = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensorId}-rec`).textContent = sensor.recommendation[currentCondition];
+                
+                // Change fill color based on moisture level
+                const fill = document.getElementById(`${sensorId}-fill`);
+                if (sensor.moisture[currentCondition] < 20) {
+                    fill.style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
+                } else if (sensor.moisture[currentCondition] < 30) {
+                    fill.style.background = 'linear-gradient(90deg, #f97316, #facc15)';
+                } else {
+                    fill.style.background = 'linear-gradient(90deg, var(--primary-color), var(--accent-color))';
+                }
+            }
+        });
+        
+        irrigateBtn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.demo-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to this button
+            this.classList.add('active');
+            
+            // Update current condition
+            currentCondition = 'irrigated';
+            
+            // Update demo field
+            demoField.style.filter = 'brightness(1) saturate(1.1)';
+            irrigationOverlay.style.opacity = '0.3';
+            
+            // Create droplets
+            createDroplets();
+            
+            // Show droplets
+            setTimeout(() => {
+                document.querySelectorAll('.irrigation-droplet').forEach(droplet => {
+                    droplet.style.opacity = '1';
+                });
+            }, 100);
+            
+            // Update any visible tooltips
+            const visibleTooltip = document.querySelector('.sensor-tooltip[style*="display: block"]');
+            if (visibleTooltip) {
+                const sensorId = visibleTooltip.id.replace('tooltip-', '');
+                const sensor = sensorData.find(s => s.id === sensorId);
+                
+                document.getElementById(`${sensorId}-moisture`).textContent = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensorId}-fill`).style.width = `${sensor.moisture[currentCondition]}%`;
+                document.getElementById(`${sensorId}-rec`).textContent = sensor.recommendation[currentCondition];
+                
+                // Change fill color based on moisture level
+                const fill = document.getElementById(`${sensorId}-fill`);
+                if (sensor.moisture[currentCondition] < 20) {
+                    fill.style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
+                } else if (sensor.moisture[currentCondition] < 30) {
+                    fill.style.background = 'linear-gradient(90deg, #f97316, #facc15)';
+                } else {
+                    fill.style.background = 'linear-gradient(90deg, var(--primary-color), var(--accent-color))';
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

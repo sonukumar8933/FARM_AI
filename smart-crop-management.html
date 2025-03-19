@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Management - Farm AI Solutions</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4ade80;
+            --primary-dark: #22c55e;
+            --background-dark: #0f172a;
+            --background-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-color: #3b82f6;
+            --gradient-start: #4ade80;
+            --gradient-end: #3b82f6;
+            --chart-green: #4ade80;
+            --chart-blue: #3b82f6;
+            --chart-orange: #f97316;
+            --chart-red: #ef4444;
+            --primary-gradient: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            --card-hover-transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            padding-top: 70px;
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.01) 2px, transparent 0),
+                radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.01) 2px, transparent 0);
+            background-size: 100px 100px;
+            background-attachment: scroll;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav.scrolled {
+            padding: 0.7rem 2rem;
+            background: rgba(30, 41, 59, 0.98);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav li {
+            position: relative;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::before {
+            width: 80%;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav a.active {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.15);
+        }
+
+        nav a.active::before {
+            width: 80%;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0;
+            text-align: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(74, 222, 128, 0.2) 0%, transparent 70%);
+            animation: pulse 4s infinite;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: var(--text-secondary);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-gradient);
+            color: var(--background-dark);
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: inset 0 0 0 0 var(--primary-color);
+            transition: color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            box-shadow: inset 0 100px 0 0 var(--primary-color);
+        }
+
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: var(--background-card);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .stat-value {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        .features-section {
+            padding: 80px 0;
+        }
+
+        .feature-card {
+            background: var(--background-card);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-top: 3px solid transparent;
+        }
+
+        .feature-card:hover {
+            border-top: 3px solid var(--primary-color);
+        }
+
+        .feature-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .feature-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+            will-change: transform;
+        }
+
+        .feature-card:hover .feature-img img {
+            transform: scale(1.1);
+        }
+
+        .feature-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .feature-content p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .how-it-works {
+            padding: 80px 0;
+            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8');
+            background-size: cover;
+            background-position: center;
+            background-attachment: scroll;
+        }
+
+        .steps-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .step-card {
+            background: var(--background-card);
+            border-radius: 15px;
+            padding: 30px;
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.15);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            color: var(--background-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .step-icon {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .step-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .step-card p {
+            color: var(--text-secondary);
+        }
+
+        .testimonials {
+            padding: 80px 0;
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: var(--background-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 3em;
+            color: var(--primary-color);
+            opacity: 0.3;
+            position: absolute;
+            left: -10px;
+            top: -20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .testimonial-author img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .author-info p {
+            margin: 5px 0 0;
+            color: var(--text-muted);
+        }
+
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .cta-content p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        footer {
+            background: var(--background-card);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a:hover {
+            color: var(--background-dark);
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.6; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .step-card {
+                width: 100%;
+            }
+
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--background-card);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                font-size: 1.5em;
+                cursor: pointer;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        /* Technology Section Styles */
+        .technology-section {
+            padding: 80px 0;
+            background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1581094794329-c8112a89af12');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .tech-card {
+            background: var(--background-card);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.15);
+        }
+        
+        .tech-icon {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tech-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        
+        .tech-card p {
+            color: var(--text-secondary);
+        }
+        
+        /* Crop Specific Section Styles */
+        .crop-specific {
+            padding: 80px 0;
+        }
+        
+        .crop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .crop-card {
+            background: var(--background-card);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .crop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.15);
+        }
+        
+        .crop-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            will-change: transform;
+        }
+        
+        .crop-card h3 {
+            color: var(--primary-color);
+            padding: 20px 20px 10px;
+            font-size: 1.5em;
+        }
+        
+        .crop-card ul {
+            padding: 0 20px 20px;
+            list-style-position: inside;
+            color: var(--text-secondary);
+        }
+        
+        .crop-card li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 5px;
+        }
+        
+        /* ROI Calculator Styles */
+        .roi-calculator {
+            padding: 80px 0;
+            background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1460925895917-afdab827c52f');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .calculator-form, .calculator-results {
+            flex: 1;
+            min-width: 300px;
+            background: var(--background-card);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(30, 41, 59, 0.9);
+            color: var(--text-primary);
+            font-size: 1em;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            cursor: pointer;
+        }
+        
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+        }
+        
+        .form-group select option {
+            background-color: var(--background-card);
+            color: var(--text-primary);
+            padding: 10px;
+        }
+        
+        .calculator-results h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .result-item.total, .result-item.roi {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: var(--primary-color);
+        }
+        
+        .disclaimer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        
+        /* Case Studies Styles */
+        .case-studies {
+            padding: 80px 0;
+        }
+        
+        .case-study-card {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--background-card);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .case-study-image {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .case-study-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            will-change: transform;
+        }
+        
+        .case-study-content {
+            flex: 2;
+            min-width: 300px;
+            padding: 30px;
+        }
+        
+        .case-study-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+        
+        .case-study-meta {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .case-study-content ul {
+            margin: 20px 0;
+            padding-left: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .case-study-content li {
+            margin-bottom: 10px;
+        }
+        
+        /* FAQ Section Styles */
+        .faq-section {
+            padding: 80px 0;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: var(--background-card);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .faq-question:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .faq-question h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--text-primary);
+        }
+        
+        .faq-toggle {
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 500px;
+        }
+        
+        .faq-answer p {
+            color: var(--text-secondary);
+        }
+        
+        /* Partners Section Styles */
+        .partners-section {
+            padding: 80px 0;
+            background: var(--background-card);
+        }
+        
+        .partners-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .partner-logo {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .partner-logo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+        }
+        
+        .partner-logo img {
+            max-width: 150px;
+            max-height: 80px;
+            filter: grayscale(100%) brightness(1.2);
+            transition: filter 0.3s;
+        }
+        
+        .partner-logo:hover img {
+            filter: grayscale(0%) brightness(1.2);
+        }
+        
+        /* Hero buttons style */
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        /* Overview content style */
+        .overview-content {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-container, .case-study-card {
+                flex-direction: column;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .tech-grid, .crop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Add smooth scrolling behavior to the entire page */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* For Safari and older browsers that don't support scroll-behavior */
+        .smooth-scroll {
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo-container">
+            <span class="logo-text">farm <span>ai</span></span>
+        </a>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#ai-solutions">AI Solutions</a></li>
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="SignUp_LogIn_Form.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1 data-aos="fade-up" data-aos-duration="1000">Smart Crop Management</h1>
+            <p data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">Revolutionize your farming with AI-powered insights for optimal crop health, precision agriculture, and maximum yields while reducing environmental impact</p>
+            <div class="hero-buttons" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                <a href="#features" class="btn">Explore Features</a>
+                <a href="demo-request.html" class="btn btn-outline">Request Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Transform Your Farming Practices</h2>
+            <p>Our Smart Crop Management system uses cutting-edge AI technology to optimize every aspect of crop production from seed selection to harvest planning</p>
+        </div>
+
+        <div class="overview-content" data-aos="fade-up" data-aos-delay="100">
+            <p>Smart Crop Management integrates satellite imagery, IoT sensors, weather data, and machine learning algorithms to provide farmers with real-time insights and actionable recommendations. Our system is designed to work with farms of all sizes, from small holdings to large commercial operations.</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-seedling feature-icon"></i>
+                <div class="stat-value">30%</div>
+                <div class="stat-label">Increase in Crop Yield</div>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-tint feature-icon"></i>
+                <div class="stat-value">25%</div>
+                <div class="stat-label">Water Usage Reduction</div>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-bug feature-icon"></i>
+                <div class="stat-value">40%</div>
+                <div class="stat-label">Decrease in Crop Disease</div>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                <i class="fas fa-rupee-sign feature-icon"></i>
+                <div class="stat-value">35%</div>
+                <div class="stat-label">Increase in Profit Margins</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Intelligent Farming Features</h2>
+                <p>Comprehensive tools to monitor, analyze, and optimize your crop production</p>
+            </div>
+
+            <div class="grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-img">
+                        <img src="https://images.unsplash.com/photo-1523741543316-beb7fc7023d8" alt="Real-time Monitoring">
+                    </div>
+                    <div class="feature-content">
+                        <h3><i class="fas fa-camera-retro"></i> Real-time Crop Monitoring</h3>
+                        <p>Monitor crop health, growth patterns, and detect issues before they become problems using our advanced AI algorithms and satellite imagery.</p>
+                        <a href="#" class="btn btn-outline">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-img">
+                        <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8" alt="Disease Detection">
+                    </div>
+                    <div class="feature-content">
+                        <h3><i class="fas fa-virus"></i> Disease & Pest Detection</h3>
+                        <p>Early identification of crop diseases and pest infestations using computer vision and machine learning for timely intervention.</p>
+                        <a href="#" class="btn btn-outline">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-img">
+                        <img src="https://images.unsplash.com/photo-1621928372414-30e144d51d49" alt="Smart Irrigation">
+                    </div>
+                    <div class="feature-content">
+                        <h3><i class="fas fa-tint"></i> Smart Irrigation System</h3>
+                        <p>Optimize water usage with AI-driven irrigation scheduling based on soil moisture, weather forecasts, and crop water requirements.</p>
+                        <a href="#" class="btn btn-outline">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-img">
+                        <img src="https://images.unsplash.com/photo-1620662736427-b8a198f52a4d" alt="Fertilizer Optimization">
+                    </div>
+                    <div class="feature-content">
+                        <h3><i class="fas fa-flask"></i> Fertilizer Optimization</h3>
+                        <p>Precise fertilizer recommendations based on soil nutrient analysis, crop requirements, and environmental conditions.</p>
+                        <a href="#" class="btn btn-outline">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-img">
+                        <img src="https://images.unsplash.com/photo-1584467541268-b040f83be3fd" alt="Yield Prediction">
+                    </div>
+                    <div class="feature-content">
+                        <h3><i class="fas fa-chart-line"></i> Yield Prediction</h3>
+                        <p>Accurate crop yield forecasting using historical data, current crop conditions, and weather patterns to help with harvest planning.</p>
+                        <a href="#" class="btn btn-outline">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-img">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71" alt="Weather Insights">
+                    </div>
+                    <div class="feature-content">
+                        <h3><i class="fas fa-cloud-sun-rain"></i> Weather Insights</h3>
+                        <p>Hyperlocal weather forecasting and alerts for extreme weather events to protect your crops and optimize field operations.</p>
+                        <a href="#" class="btn btn-outline">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="technology-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Our Technology</h2>
+                <p>Powered by cutting-edge AI and data science</p>
+            </div>
+            
+            <div class="tech-grid">
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="tech-icon"><i class="fas fa-satellite"></i></div>
+                    <h3>Remote Sensing</h3>
+                    <p>We utilize multi-spectral satellite imagery and drone surveys to monitor crop health, detect stress, and identify areas requiring attention. Our system processes NDVI (Normalized Difference Vegetation Index) and other vegetation indices to provide accurate crop health assessment.</p>
+                </div>
+                
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="tech-icon"><i class="fas fa-microchip"></i></div>
+                    <h3>IoT Sensors</h3>
+                    <p>Our network of wireless soil moisture sensors, weather stations, and crop monitors collect real-time data from your fields. These solar-powered devices transmit information to our cloud platform, providing continuous monitoring with minimal maintenance.</p>
+                </div>
+                
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="tech-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Machine Learning</h3>
+                    <p>Our proprietary algorithms analyze millions of data points to identify patterns and make predictions. The system continuously learns from your farm's specific conditions, improving accuracy over time and adapting to your unique growing environment.</p>
+                </div>
+                
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="tech-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Mobile Integration</h3>
+                    <p>Access all insights and recommendations through our intuitive mobile app. Receive real-time alerts, view detailed reports, and manage your farm operations from anywhere. The app works offline and syncs when connectivity is available.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="crop-specific">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Crop-Specific Solutions</h2>
+                <p>Tailored management strategies for different crop types</p>
+            </div>
+            
+            <div class="crop-grid">
+                <div class="crop-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1601599561213-832382fd07ba" alt="Rice">
+                    <h3>Rice</h3>
+                    <ul>
+                        <li>Water level monitoring and management</li>
+                        <li>Disease detection specialized for paddy fields</li>
+                        <li>Optimized fertilizer scheduling</li>
+                        <li>Harvest timing recommendations</li>
+                    </ul>
+                </div>
+                
+                <div class="crop-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1574323347407-f5e1c5a1ec21" alt="Wheat">
+                    <h3>Wheat</h3>
+                    <ul>
+                        <li>Growth stage monitoring</li>
+                        <li>Rust and fungal disease early detection</li>
+                        <li>Nitrogen application optimization</li>
+                        <li>Yield prediction by field section</li>
+                    </ul>
+                </div>
+                
+                <div class="crop-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1598512752271-33f913a5af13" alt="Fruits">
+                    <h3>Fruits & Orchards</h3>
+                    <ul>
+                        <li>Tree health monitoring</li>
+                        <li>Fruit ripeness detection</li>
+                        <li>Pest pressure mapping</li>
+                        <li>Pruning and thinning recommendations</li>
+                    </ul>
+                </div>
+                
+                <div class="crop-card" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1595841696677-6489ff3f8cd1" alt="Vegetables">
+                    <h3>Vegetables</h3>
+                    <ul>
+                        <li>Precision irrigation scheduling</li>
+                        <li>Nutrient deficiency identification</li>
+                        <li>Harvest window optimization</li>
+                        <li>Rotation planning assistance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>How Smart Crop Management Works</h2>
+                <p>A simple process that delivers powerful results for your farm</p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">1</div>
+                    <div class="step-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3>Field Mapping</h3>
+                    <p>Map your fields using satellite imagery or drone surveys to create a digital twin of your farm for precise monitoring and management.</p>
+                </div>
+
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">2</div>
+                    <div class="step-icon"><i class="fas fa-satellite"></i></div>
+                    <h3>Data Collection</h3>
+                    <p>Collect real-time data from multiple sources including satellites, IoT sensors, drones, and weather stations.</p>
+                </div>
+
+                <div class="step-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">3</div>
+                    <div class="step-icon"><i class="fas fa-brain"></i></div>
+                    <h3>AI Analysis</h3>
+                    <p>Our advanced algorithms analyze the data to identify patterns, predict outcomes, and generate actionable insights.</p>
+                </div>
+
+                <div class="step-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="step-number">4</div>
+                    <div class="step-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <h3>Recommendations</h3>
+                    <p>Receive customized recommendations for irrigation, fertilization, pest control, and harvest timing through our mobile app.</p>
+                </div>
+
+                <div class="step-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="step-number">5</div>
+                    <div class="step-icon"><i class="fas fa-sync-alt"></i></div>
+                    <h3>Implementation & Feedback</h3>
+                    <p>Implement the recommendations and provide feedback to continuously improve the system's accuracy and effectiveness.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="roi-calculator">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Calculate Your ROI</h2>
+                <p>See how Smart Crop Management can impact your bottom line</p>
+            </div>
+            
+            <div class="calculator-container" data-aos="fade-up" data-aos-delay="100">
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="farm-size">Farm Size (Acres)</label>
+                        <input type="number" id="farm-size" min="1" value="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="crop-type">Primary Crop</label>
+                        <select id="crop-type">
+                            <option value="rice">Rice</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="corn">Corn</option>
+                            <option value="soybean">Soybean</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current-yield">Current Yield (Tons/Acre)</label>
+                        <input type="number" id="current-yield" min="0.1" step="0.1" value="3.5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current-input-cost">Current Input Cost (₹/Acre)</label>
+                        <input type="number" id="current-input-cost" min="1000" step="100" value="15000">
+                    </div>
+                    
+                    <button id="calculate-roi" class="btn">Calculate Savings</button>
+                </div>
+                
+                <div class="calculator-results">
+                    <h3>Estimated Annual Benefits</h3>
+                    <div class="result-item">
+                        <span>Yield Increase:</span>
+                        <span id="yield-increase">+30%</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Input Cost Reduction:</span>
+                        <span id="cost-reduction">-15%</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Additional Revenue:</span>
+                        <span id="additional-revenue">₹525,000</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Cost Savings:</span>
+                        <span id="cost-savings">₹225,000</span>
+                    </div>
+                    <div class="result-item total">
+                        <span>Total Annual Benefit:</span>
+                        <span id="total-benefit">₹750,000</span>
+                    </div>
+                    <div class="result-item roi">
+                        <span>ROI:</span>
+                        <span id="roi">500%</span>
+                    </div>
+                    <p class="disclaimer">Results are estimates based on average improvements seen by our customers. Actual results may vary.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Success Stories</h2>
+                <p>Hear from farmers who have transformed their operations with our Smart Crop Management system</p>
+            </div>
+
+            <div class="testimonial-container">
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+                    <p class="testimonial-text">The Smart Crop Management system has completely transformed how we run our farm. The AI recommendations have helped us increase our yield by 30% and reduce our water usage by 25%. It's been a game-changer for our operation.</p>
+                    <div class="testimonial-author">
+                        <img src="https://via.placeholder.com/60" alt="John Doe">
+                        <div class="author-info">
+                            <h4>John Doe</h4>
+                            <p>Farm Owner</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+                    <p class="testimonial-text">The AI-powered insights provided by the Smart Crop Management system have helped us identify and treat crop diseases early, which has resulted in a 40% decrease in crop disease. This has significantly improved our crop yield and quality.</p>
+                    <div class="testimonial-author">
+                        <img src="https://via.placeholder.com/60" alt="Jane Smith">
+                        <div class="author-info">
+                            <h4>Jane Smith</h4>
+                            <p>Farm Owner</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+                    <p class="testimonial-text">The Smart Crop Management system has helped us optimize our fertilizer usage, resulting in a 35% increase in profit margins. It's been a great investment for our farm.</p>
+                    <div class="testimonial-author">
+                        <img src="https://via.placeholder.com/60" alt="Mike Johnson">
+                        <div class="author-info">
+                            <h4>Mike Johnson</h4>
+                            <p>Farm Owner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="case-studies">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Case Studies</h2>
+                <p>Real-world examples of Smart Crop Management in action</p>
+            </div>
+            
+            <div class="case-study-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="case-study-image">
+                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef" alt="Punjab Farm Case Study">
+                </div>
+                <div class="case-study-content">
+                    <h3>Punjab Wheat Farm Transformation</h3>
+                    <p class="case-study-meta">Location: Ludhiana, Punjab | Farm Size: 200 Acres</p>
+                    <p>A 200-acre wheat farm in Punjab was struggling with inconsistent yields and rising input costs. After implementing our Smart Crop Management system:</p>
+                    <ul>
+                        <li>Early detection of rust disease saved 40 acres from significant damage</li>
+                        <li>Precision irrigation reduced water usage by 28%</li>
+                        <li>Variable rate fertilizer application decreased input costs by 22%</li>
+                        <li>Overall yield increased by 35% in the first season</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline">Read Full Case Study</a>
+                </div>
+            </div>
+            
+            <div class="case-study-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="case-study-image">
+                    <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2" alt="Karnataka Farm Case Study">
+                </div>
+                <div class="case-study-content">
+                    <h3>Karnataka Vegetable Cooperative Success</h3>
+                    <p class="case-study-meta">Location: Belgaum, Karnataka | Farm Size: 50 Acres (Multiple Smallholdings)</p>
+                    <p>A cooperative of 15 small vegetable farmers in Karnataka implemented our system to improve their market competitiveness:</p>
+                    <ul>
+                        <li>Coordinated planting and harvesting increased market supply consistency</li>
+                        <li>Disease early warning system reduced crop losses by 45%</li>
+                        <li>Optimized irrigation scheduling during drought conditions saved crops worth ₹15 lakhs</li>
+                        <li>Premium pricing achieved due to improved quality and organic certification support</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline">Read Full Case Study</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Frequently Asked Questions</h2>
+                <p>Common questions about our Smart Crop Management system</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="faq-question">
+                        <h3>How much does the system cost?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our pricing is based on farm size and the specific modules you need. Basic packages start at ₹2,500 per acre per year, with discounts for larger farms. We also offer flexible payment options including seasonal billing to align with your cash flow. Contact us for a customized quote.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="150">
+                    <div class="faq-question">
+                        <h3>Do I need internet connectivity in my fields?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No, our system works in areas with limited connectivity. The IoT sensors use low-power wide-area network (LPWAN) technology to transmit data, and our mobile app can work offline, syncing when connectivity is available. For farms with no connectivity, we offer satellite communication options.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="faq-question">
+                        <h3>How long does it take to set up the system?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Initial setup typically takes 2-3 weeks, including field mapping, sensor installation, and system configuration. Our team handles the entire process, and you'll receive comprehensive training. The system becomes more accurate over time as it learns your specific farm conditions.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="250">
+                    <div class="faq-question">
+                        <h3>Can the system work for organic farming?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Our system is particularly valuable for organic farmers. It provides early pest and disease detection, allowing for timely application of organic treatments. The system also includes specific recommendations for organic inputs and can help with organic certification documentation.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="faq-question">
+                        <h3>What crops does the system support?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our system supports a wide range of crops including cereals (rice, wheat, maize), pulses, oilseeds, fruits, vegetables, and commercial crops like cotton and sugarcane. We're continuously adding support for more crops based on farmer demand.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Farming Practices?</h2>
+                <p>Join our community of farmers and start experiencing the benefits of Smart Crop Management today.</p>
+                <a href="SignUp_LogIn_Form.html" class="btn">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Farm AI</h3>
+                    <p>We are dedicated to revolutionizing agriculture through AI-powered solutions that help farmers increase yields, reduce costs, and practice sustainable farming.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Our Solutions</h3>
+                    <ul>
+                        <li><a href="#">Smart Crop Management</a></li>
+                        <li><a href="#">Precision Irrigation</a></li>
+                        <li><a href="#">Pest & Disease Control</a></li>
+                        <li><a href="#">Yield Prediction</a></li>
+                        <li><a href="#">Farm Analytics</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Research Papers</a></li>
+                        <li><a href="#">Farming Guides</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> sonuk.gupta81@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +91 8109246603</p>
+                    <p><i class="fas fa-map-marker-alt"></i> VIT University, BHOPAL, India</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Farm AI Solutions | All rights reserved</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Disable AOS for performance but add minimal animations with IntersectionObserver
+        AOS.init({ disable: true });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove all AOS attributes
+            document.querySelectorAll('[data-aos]').forEach(el => {
+                el.removeAttribute('data-aos');
+                el.removeAttribute('data-aos-delay');
+                el.removeAttribute('data-aos-duration');
+            });
+            
+            // Fix all feature card images with more reliable image URLs
+            const featureImages = {
+                'Real-time Crop Monitoring': 'https://images.unsplash.com/photo-1523741543316-beb7fc7023d8',
+                'Disease & Pest Detection': 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8',
+                'Smart Irrigation System': 'https://images.unsplash.com/photo-1621928372414-30e144d51d49',
+                'Fertilizer Optimization': 'https://images.unsplash.com/photo-1620662736427-b8a198f52a4d',
+                'Yield Prediction': 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd',
+                'Weather Insights': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71'
+            };
+            
+            // Apply images to all feature cards immediately
+            document.querySelectorAll('.feature-card').forEach(card => {
+                const img = card.querySelector('img');
+                const titleEl = card.querySelector('h3');
+                if (!titleEl) return;
+                
+                // Extract the title text without the icon
+                const title = titleEl.textContent.trim().replace(/^[^\s]+ /, '');
+                
+                if (featureImages[title]) {
+                    // Set new image source
+                    img.src = featureImages[title];
+                    
+                    // Force image to display properly
+                    img.style.display = 'block';
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    
+                    console.log(`Set image for ${title}: ${featureImages[title]}`);
+                }
+            });
+            
+            // Specifically ensure the first two cards have images
+            const firstCard = document.querySelector('.feature-card:nth-child(1)');
+            const secondCard = document.querySelector('.feature-card:nth-child(2)');
+            
+            if (firstCard) {
+                const img = firstCard.querySelector('img');
+                img.src = 'https://images.unsplash.com/photo-1523741543316-beb7fc7023d8';
+                img.style.display = 'block';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                console.log('Fixed Real-time Crop Monitoring image');
+            }
+            
+            if (secondCard) {
+                const img = secondCard.querySelector('img');
+                img.src = 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8';
+                img.style.display = 'block';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                console.log('Fixed Disease & Pest Detection image');
+            }
+            
+            // Update contact information to match index page
+            const updateContactInfo = () => {
+                const contactSection = document.querySelector('.footer-section:nth-child(4)');
+                if (contactSection) {
+                    const contactHTML = `
+                        <h3>Contact Us</h3>
+                        <p><i class="fas fa-envelope"></i> sonuk.gupta81@gmail.com</p>
+                        <p><i class="fas fa-phone"></i> +91 8109246603</p>
+                        <p><i class="fas fa-map-marker-alt"></i> VIT University, BHOPAL, India</p>
+                        <div class="social-links">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    `;
+                    contactSection.innerHTML = contactHTML;
+                    console.log('Updated contact information');
+                }
+            };
+            
+            // Update contact info
+            updateContactInfo();
+            
+            // ... rest of existing code ...
+        });
+        
+        // ... rest of existing code ...
+    </script>
+</body>
+</html>

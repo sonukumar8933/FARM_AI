@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm AI Solutions</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="App.jsx">
+   
+ 
+
+    <style>
+        :root {
+            --primary-color: #4ade80;
+            --primary-dark: #22c55e;
+            --background-dark: #0f172a;
+            --background-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-color: #3b82f6;
+            --gradient-start: #4ade80;
+            --gradient-end: #3b82f6;
+            --chat-background: #1e293b;
+            --user-message-bg: #4ade80;
+            --bot-message-bg: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            padding-top: 70px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav.scrolled {
+            padding: 0.7rem 2rem;
+            background: rgba(30, 41, 59, 0.98);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav li {
+            position: relative;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::before {
+            width: 80%;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav a.active {
+            color: var(--primary-color);
+            background: rgba(74, 222, 128, 0.15);
+        }
+
+        nav a.active::before {
+            width: 80%;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            nav ul {
+                gap: 0.5rem;
+            }
+
+            nav a {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.9em;
+            }
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1464226184884-fa280b87c399');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0;
+            text-align: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(74, 222, 128, 0.2) 0%, transparent 70%);
+            animation: pulse 4s infinite;
+        }
+
+        /* .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        } */
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-secondary);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .card:hover .ai-feature-icon {
+            animation: pulse 2s infinite;
+        }
+
+        .feature-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: var(--text-primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: glow 2s infinite;
+        }
+
+        .feature-description {
+            margin-top: 15px;
+            color: var(--text-muted);
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .feature-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .feature-link:hover {
+            color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        form {
+            display: grid;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        input, textarea, select {
+            padding: 12px;
+            background: var(--background-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: var(--background-dark);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        footer {
+            background: var(--background-card);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a:hover {
+            color: var(--background-dark);
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p {
+            margin: 5px 0;
+        }
+
+        /* Dark theme specific styles for form placeholders */
+        ::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--background-card);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Glowing effect for feature cards */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Enhanced animations and effects */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px var(--primary-color); }
+            50% { box-shadow: 0 0 20px var(--primary-color); }
+            100% { box-shadow: 0 0 5px var(--primary-color); }
+        }
+
+        /* Interactive Statistics Section */
+        .stats-section {
+            padding: 60px 0;
+            background: var(--background-card);
+            margin: 40px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        /* Interactive Features */
+        .interactive-demo {
+            background: var(--background-card);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: var(--background-dark);
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px;
+        }
+
+        .demo-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 60px 0;
+        }
+
+        .testimonial-card {
+            background: var(--background-card);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .testimonial-text {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info {
+            color: var(--text-primary);
+        }
+
+        .author-role {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        /* Progress Indicators */
+        .progress-bar {
+            height: 6px;
+            background: var(--background-dark);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+
+        /* Logo Styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .logo-image {
+            width: 32px;
+            height: 32px;
+            display: block;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.3));
+        }
+
+        .logo-container:hover .logo-image {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.5));
+        }
+
+        .logo-text {
+            font-size: 1.5em;
+            font-weight: 300;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            position: relative;
+        }
+
+        .logo-text span {
+            color: #4ade80;
+            font-weight: 400;
+        }
+
+        .logo-text::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4ade80, transparent);
+            transition: width 0.3s ease;
+        }
+
+        .logo-container:hover .logo-text::after {
+            width: 100%;
+        }
+
+        /* Hero Logo */
+        .hero-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 25px;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.2));
+        }
+
+        .hero-logo-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        /* Hero Logo Reflection */
+        /* .hero-logo-reflection {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%) scaleY(-0.2);
+            width: 60px;
+            height: 15px;
+            background: radial-gradient(ellipse at center, rgba(74, 222, 128, 0.2), transparent 70%);
+            filter: blur(5px);
+        } */
+
+        /* Chatbot Styles */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--gradient-end), var(--gradient-start));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05) rotate(360deg);
+            box-shadow: 0 6px 16px rgba(74, 222, 128, 0.3);
+        }
+
+        .chat-toggle:hover::before {
+            opacity: 1;
+        }
+
+        .chat-icon {
+            width: 30px;
+            height: 30px;
+            color: white;
+            position: relative;
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-icon-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .chat-icon-leaf {
+            width: 24px;
+            height: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-header-icon {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        .close-icon {
+            width: 24px;
+            height: 24px;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .close-button:hover .close-icon {
+            transform: rotate(90deg);
+        }
+
+        .chat-container {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            height: 500px;
+            background-color: var(--chat-background);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(74, 222, 128, 0.1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .chat-header {
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            scroll-behavior: smooth;
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 3px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 0.5rem;
+            animation: messageSlide 0.3s ease-out;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            transition: transform 0.2s ease;
+            animation: messagePop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes messagePop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .user .message-content {
+            background: var(--user-message-bg);
+            color: var(--background-dark);
+            border-top-right-radius: 0.25rem;
+            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.2);
+        }
+
+        .bot .message-content {
+            background-color: var(--bot-message-bg);
+            color: var(--text-primary);
+            border-top-left-radius: 0.25rem;
+        }
+
+        .input-container {
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            background-color: var(--background-card);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-container textarea {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            resize: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-container textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="logo-text">farm <span>ai</span></span>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#ai-solutions">AI Solutions</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="SignUp_LogIn_Form.html">Login</a></li>
+        </ul>
+    </nav>
+
+
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Smart Farming with AI</h1>
+            <p>Transform your agricultural practices with cutting-edge artificial intelligence solutions for sustainable and profitable farming</p>
+        </div>
+    </section>
+
+    <section class="stats-section" data-aos="fade-up">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="15000">0</div>
+                    <div class="stat-label">Farmers Empowered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="95">0</div>
+                    <div class="stat-label">Success Rate %</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="500000">0</div>
+                    <div class="stat-label">Hectares Analyzed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="40">0</div>
+                    <div class="stat-label">Countries Served</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="interactive-demo" data-aos="zoom-in">
+        <div class="container">
+            <h2>Experience AI Farming</h2>
+            <p>Try our interactive demo to see how AI can transform your farming</p>
+            <button class="demo-button" id="startDemo">Start Interactive Demo</button>
+            <div id="demoContent" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai-solutions" class="ai-solutions">
+        <div class="container">
+            <div class="section-title">
+                <h2>AI-Powered Solutions</h2>
+                <p>Advanced technology for modern agriculture</p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <span class="feature-badge">New</span>
+                    <div class="ai-feature-icon">🔍</div>
+                    <h3>AI-Based Pest & Disease Detection</h3>
+                    <p>Real-time detection and identification of crop diseases and pests using computer vision</p>
+                    <div class="feature-description">
+                        • Instant disease identification<br>
+                        • Early pest detection<br>
+                        • Treatment recommendations<br>
+                        • Historical tracking
+                    </div>
+                    <a href="pest-disease-detection.html" class="feature-link">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <div class="ai-feature-icon">🌱</div>
+                    <h3>Crop & Soil Health Monitoring</h3>
+                    <p>Continuous monitoring and analysis of soil conditions and crop health using AI sensors</p>
+                    <div class="feature-description">
+                        • Real-time nutrient analysis<br>
+                        • Soil composition monitoring<br>
+                        • Growth stage tracking<br>
+                        • Health alerts
+                    </div>
+                    <a href="soil-health-monitoring.html" class="feature-link">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <div class="ai-feature-icon">💧</div>
+                    <h3>AI-Driven Precision Irrigation</h3>
+                    <p>Smart irrigation system that optimizes water usage based on real-time data</p>
+                    <div class="feature-description">
+                        • Weather-based scheduling<br>
+                        • Soil moisture monitoring<br>
+                        • Water usage optimization<br>
+                        • Automated controls
+                    </div>
+                    <a href="precision-irrigation.html" class="feature-link">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <span class="feature-badge">Trending</span>
+                    <div class="ai-feature-icon">📊</div>
+                    <h3>Market Access & Price Prediction</h3>
+                    <p>AI-powered market intelligence and price forecasting for better decision making</p>
+                    <div class="feature-description">
+                        • Price trend analysis<br>
+                        • Demand forecasting<br>
+                        • Market connectivity<br>
+                        • Optimal harvest timing
+                    </div>
+                    <a href="market-prediction.html" class="feature-link">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <div class="ai-feature-icon">🤖</div>
+                    <h3>AI Farming Assistant</h3>
+                    <p>24/7 intelligent chatbot support for instant farming guidance</p>
+                    <div class="feature-description">
+                        • Real-time problem solving<br>
+                        • Multilingual support<br>
+                        • Expert knowledge base<br>
+                        • Voice assistance
+                    </div>
+                    <a href="NEXUS AI/dist/index.html" target="_blank" class="feature-link">Try NEXUS AI →</a>
+                </div>
+
+                <div class="card">
+                    <div class="ai-feature-icon">🌿</div>
+                    <h3>Smart Crop Management</h3>
+                    <p>AI-powered solutions for optimizing agricultural productivity</p>
+                    <div class="feature-description">
+                        • Rotation planning<br>
+                        • Fertilizer optimization<br>
+                        • Yield prediction<br>
+                        • Resource management
+                    </div>
+                    <a href="smart-crop-management.html" class="feature-link">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <span class="feature-badge">Essential</span>
+                    <div class="ai-feature-icon">🏦</div>
+                    <h3>Financial Services Integration</h3>
+                    <p>Access tailored financial solutions including easy loan access, crop insurance, risk assessment tools, and seamless payment solutions - all integrated with your farm data.</p>
+                    <div class="feature-description">
+                        • Easy loan access<br>
+                        • Crop insurance<br>
+                        • Risk assessment<br>
+                        • Payment solutions
+                    </div>
+                    <a href="financial-services.html" class="feature-link">Learn More →</a>
+                </div>
+
+                <div class="card" data-aos="fade-left">
+                    <div class="ai-feature-icon">🌤️</div>
+                    <h3>Weather Intelligence</h3>
+                    <p>AI-based weather forecasting and natural disaster early warning system</p>
+                    <div class="feature-description">
+                        • Precise forecasting<br>
+                        • Disaster alerts<br>
+                        • Season planning<br>
+                        • Climate analytics
+                    </div>
+                    <a href="weather-intelligence.html" class="feature-link">Learn More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Success Stories</h2>
+                <p>Hear from farmers who transformed their agriculture with AI</p>
+            </div>
+            <div class="grid">
+                <div class="testimonial-card" data-aos="fade-right">
+                    <div class="testimonial-text">
+                        "The AI-powered pest detection system helped me save 40% of my crop that would have been lost to disease. This technology is revolutionary!"
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe" class="author-avatar">
+                        <div class="author-info">
+                            <div>John Doe</div>
+                            <div class="author-role">Wheat Farmer, USA</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-left">
+                    <div class="testimonial-text">
+                        "The precision irrigation system reduced our water consumption by 30% while improving crop yield. It's amazing how AI can make farming more sustainable."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Sarah Smith" class="author-avatar">
+                        <div class="author-info">
+                            <div>Sarah Smith</div>
+                            <div class="author-role">Organic Farmer, Canada</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Get Started</h2>
+                <p>Transform your farm with AI-powered solutions</p>
+            </div>
+            <form id="contactForm">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <input type="tel" placeholder="Phone Number">
+                <select required>
+                    <option value="">Select Service</option>
+                    <option value="pest">Pest & Disease Detection</option>
+                    <option value="soil">Soil Health Monitoring</option>
+                    <option value="irrigation">Precision Irrigation</option>
+                    <option value="market">Market Intelligence</option>
+                    <option value="complete">Complete Solution</option>
+                </select>
+                <textarea placeholder="Tell us about your farm and requirements" rows="5" required></textarea>
+                <button type="submit">Request Demo</button>
+            </form>
+        </div>
+    </section>
+
+    <div id="chatbot" class="chat-widget">
+        <button class="chat-toggle" id="chat-toggle" style="display: flex;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="chat-icon">
+                <path d="M19.5 2A2.5 2.5 0 0 1 22 4.5v9a2.5 2.5 0 0 1-2.5 2.5H12l-5 5v-5H4.5A2.5 2.5 0 0 1 2 14.5v-9A2.5 2.5 0 0 1 4.5 2h15zM12 6a.75.75 0 0 0-.75.75v3.75h-3.75a.75.75 0 0 0 0 1.5h3.75v3.75a.75.75 0 0 0 1.5 0v-3.75h3.75a.75.75 0 0 0 0-1.5h-3.75v-3.75A.75.75 0 0 0 12 6z"/>
+            </svg>
+            <div class="chat-icon-overlay">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="chat-icon-leaf">
+                    <path d="M12.79 21c-.15 0-.29-.01-.44-.04-8.6-1.55-8.1-8.77-8.1-8.81.04-.31.29-.57.6-.62.33-.05.65.11.8.41.04.09 1.03 2.05 2.4 2.05 1.06 0 1.87-.92 2.98-2.02C13.93 9.09 16.62 6.4 20 6.4c.39 0 .74.24.89.61.14.36.05.77-.24 1.05-1.57 1.54-1.23 5.96-.76 7.99.08.35-.06.7-.35.92-.14.11-.31.16-.48.16-.08 0-.16-.01-.24-.04-.11-.02-2.63-.58-4.02-2.01-.88-.9-1.35-2.1-1.37-3.55 0-.29.28-.62.65-.62h.01c.36 0 .65.29.66.65.01 1.03.32 1.82.93 2.45.98 1 2.97 1.38 3.18 1.43-.04-.18-.07-.37-.1-.56-.28-1.97-.89-7.66 2.11-10.7-3.28.13-5.72 2.65-7.42 4.35-1.21 1.21-2.23 2.26-3.93 2.26-2.02 0-3.33-1.81-3.97-2.96.91 2.95 3.69 6.95 10.26 8.23.36.06.6.4.54.76-.05.32-.33.56-.65.56z"/>
+                </svg>
+            </div>
+        </button>
+        
+        <div class="chat-container" id="chat-container" style="display: none;">
+            <div class="chat-header">
+                <div class="chat-header-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="chat-header-icon">
+                        <path d="M12.79 21c-.15 0-.29-.01-.44-.04-8.6-1.55-8.1-8.77-8.1-8.81.04-.31.29-.57.6-.62.33-.05.65.11.8.41.04.09 1.03 2.05 2.4 2.05 1.06 0 1.87-.92 2.98-2.02C13.93 9.09 16.62 6.4 20 6.4c.39 0 .74.24.89.61.14.36.05.77-.24 1.05-1.57 1.54-1.23 5.96-.76 7.99.08.35-.06.7-.35.92-.14.11-.31.16-.48.16-.08 0-.16-.01-.24-.04-.11-.02-2.63-.58-4.02-2.01-.88-.9-1.35-2.1-1.37-3.55 0-.29.28-.62.65-.62h.01c.36 0 .65.29.66.65.01 1.03.32 1.82.93 2.45.98 1 2.97 1.38 3.18 1.43-.04-.18-.07-.37-.1-.56-.28-1.97-.89-7.66 2.11-10.7-3.28.13-5.72 2.65-7.42 4.35-1.21 1.21-2.23 2.26-3.93 2.26-2.02 0-3.33-1.81-3.97-2.96.91 2.95 3.69 6.95 10.26 8.23.36.06.6.4.54.76-.05.32-.33.56-.65.56z"/>
+                    </svg>
+                    <h1>Farm AI Assistant</h1>
+                </div>
+                <button class="close-button" id="close-chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="close-icon">
+                        <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="messages-container" id="messages-container">
+                <div class="message bot">
+                    <div class="message-content">
+                        Hello! I'm your Farm AI Assistant. How can I help you with your farming needs today?
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <textarea id="chat-input" placeholder="Type your message here..." rows="1"></textarea>
+                <button id="send-button" class="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Smart Farm AI</h3>
+                    <p>Transforming agriculture through artificial intelligence and smart technology solutions. We help farmers optimize yields, reduce costs, and practice sustainable farming.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/smartfarmai" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://twitter.com/smartfarmai" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://linkedin.com/company/smartfarmai" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://instagram.com/smartfarmai" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/smartfarmai" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#home">Home</a>
+                    <a href="#ai-solutions">AI Solutions</a>
+                    <a href="#features">Features</a>
+                    <a href="#services">Services</a>
+                    <a href="#contact">Contact</a>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Our Solutions</h3>
+                    <a href="#">Pest & Disease Detection</a>
+                    <a href="#">Soil Health Monitoring</a>
+                    <a href="#">Precision Irrigation</a>
+                    <a href="#">Yield Prediction</a>
+                    <a href="#">Market Intelligence</a>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fas fa-university"></i> VIT Bhopal University</p>
+                    <p><i class="fas fa-phone"></i> +91 8109246603</p>
+                    <p><i class="fas fa-envelope"></i> sonuk.gupta81@gmail.com</p>
+                    <p><i class="fas fa-clock"></i> Mon-Fri: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2024 Smart Farm AI | VIT Bhopal University. All rights reserved.</p>
+                <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Cookie Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="chatbot.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Make sure chatbot is visible
+        window.addEventListener('load', function() {
+            const chatToggle = document.getElementById('chat-toggle');
+            if (chatToggle) {
+                chatToggle.style.display = 'flex';
+            }
+        });
+
+        // Navigation scroll effect
+        const nav = document.querySelector('nav');
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('section');
+
+        // Handle scroll effects
+        window.addEventListener('scroll', () => {
+            // Add/remove scrolled class to navigation
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+
+            // Update active navigation link based on scroll position
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling with offset for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                const offset = 70; // Height of fixed header
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Update active state
+                navLinks.forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Animate statistics numbers
+        function animateNumber(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.round(current).toLocaleString();
+            }, 20);
+        }
+
+        // Animate statistics when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const target = parseInt(stat.getAttribute('data-target'));
+                        animateNumber(stat, target);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.querySelectorAll('.stats-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Interactive Demo
+        document.getElementById('startDemo').addEventListener('click', function() {
+            const demoContent = document.getElementById('demoContent');
+            const progressFill = demoContent.querySelector('.progress-fill');
+            
+            demoContent.style.display = 'block';
+            progressFill.style.width = '0%';
+            
+            setTimeout(() => {
+                progressFill.style.width = '100%';
+            }, 100);
+
+            this.textContent = 'Analyzing...';
+            
+            setTimeout(() => {
+                this.textContent = 'Start Interactive Demo';
+                demoContent.style.display = 'none';
+                alert('AI Analysis Complete! Your farm has great potential for smart irrigation and precision farming.');
+            }, 3000);
+        });
+
+        // Form handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your interest! Our team will contact you soon to schedule a demo.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
