@@ -1,0 +1,24 @@
+top-header-button:(frontend)
+1)Home-working
+2)AI Solutions-working
+3)Features-#
+4)Services-#
+5)Contact-#
+6)Login-working
+
+AI-Powered Solutions-working(key-public)#security risk
+cropand soil health monitoring-iot connection req
+water calculation-working
+market access and price prediction-working
+nexus-ai working(key public)risk
+Smart Crop Management-working(not optimized)
+Financial Services Integration-(fonted working)-backend integration pending
+weather intelligence-fontedn working/backend need to conncet api
+
+login/registation -link auth required backend issue
+sms/whatsapp message integration -pending
+fodder link pending 
+
+ai-chatbot working-voice integration pending
+
+future dev-down
