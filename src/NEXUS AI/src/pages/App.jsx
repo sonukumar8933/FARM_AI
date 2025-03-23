@@ -34,7 +34,7 @@ function App() {
     // Function to navigate back to home page
     const goBackToHome = () => {
         // Using relative path that works when the app is in the /dist folder
-        window.location.href = '../../index.html';
+        window.location.href = '..\..\index.html';
     };
 
     return (

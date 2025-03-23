@@ -253,23 +253,47 @@ form{ width: 100%; }
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    gap: 16px;
 }
 
     .social-icons a{
         display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 46px;
+        height: 46px;
         padding: 10px;
-        border: 1px solid transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 8px;
         font-size: 24px;
         color: var(--text-secondary);
-        margin: 0 8px;
+        background-color: var(--background-dark);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .social-icons a i {
+        font-size: 24px;
+    }
+
+    /* Fallback for when Boxicons fails to load */
+    .social-icons a i::after {
+        content: attr(data-icon);
+        display: none;
+        font-style: normal;
+        font-weight: bold;
+    }
+
+    /* Show fallback content if Boxicons class doesn't render properly */
+    .social-icons a i:not([class*="bxl-"])::after,
+    .social-icons a i:not(:before)::after {
+        display: inline;
     }
 
     .social-icons a:hover {
         border-color: var(--primary-color);
         color: var(--primary-color);
         transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(74, 222, 128, 0.2);
     }
 
 .toggle-box{
